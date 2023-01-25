@@ -1,60 +1,51 @@
 #include "sort.h"
 
 /**
- * heap_sort - sorts an array following the Heap sort algorithm
- * @array: array of ints to sort
- * @size: size of the array to sort
- */
-void heap_sort(int *array, size_t size)
+* stupify - recurrssive heapfiy function
+* @array: Array to sort
+* @heap: size of heap data
+* @i: index
+* @size: size of array
+*/
+
+void stupify(int *array, int heap, int i, int size)
 {
-	int i;
-	int tmp;
+	int lar = i, left = 2 * i + 1, right = 2 * i + 2, t;
 
-	if (size < 2)
-		return;
-
-	for (i = size / 2 - 1; i >= 0; i--)
-		heapify(array, size, (size_t)i, size);
-
-	for (i = size - 1; i >= 0; i--)
+	if (left < heap && array[left] > array[lar])
+		lar = left;
+	if (right < heap && array[right] > array[lar])
+		lar = right;
+	if (lar != i)
 	{
-		tmp = array[i];
-		array[i] = array[0];
-		array[0] = tmp;
-		if (i != 0)
-			print_array(array, size);
-		heapify(array, (size_t)i, 0, size);
+		t = array[i], array[i] = array[lar], array[lar] = t;
+		print_array(array, size);
+		stupify(array, heap, lar, size);
 	}
 }
 
 /**
- * heapify - turns an array in a heap tree
- * @array: array to turn into heap
- * @s: size of the subtree
- * @root: index of the subtree in the heap
- * @size: size of the whole array
- */
-void heapify(int *array, size_t s, size_t root, size_t size)
+* heap_sort - Sorts array with heap sort algo
+* @array: array to sort
+* @size: Size of array to sort
+*/
+
+void heap_sort(int *array, size_t size)
 {
-	size_t max, left, right;
-	int tmp;
+	int i = size / 2 - 1, temp;
 
-	max = root;
-	left = (root * 2) + 1;
-	right = (root * 2) + 2;
-
-	if (left < s && array[left] > array[max])
-		max = left;
-
-	if (right < s && array[right] > array[max])
-		max = right;
-
-	if (max != root)
+	if (array == NULL || size < 2)
+		return;
+	for (; i >= 0; i--)
+		stupify(array, size, i, size);
+	for (i = size - 1; i >= 0; i--)
 	{
-		tmp = array[root];
-		array[root] = array[max];
-		array[max] = tmp;
-		print_array(array, size);
-		heapify(array, s, max, size);
+		temp = array[0];
+		array[0] = array[i];
+		array[i] = temp;
+		if (i > 0)
+			print_array(array, size);
+		stupify(array, i, 0, size);
 	}
+
 }
